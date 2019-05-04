@@ -1,5 +1,8 @@
 # for more detail, see class Model in :
 # https://github.com/pallets/flask-sqlalchemy/blob/master/flask_sqlalchemy/model.py
+from typing import Any, List, Type
+
+
 class MyModel(object):
     query_class = None  # flask_alchemy attribute
     query = None  # flask_alchemy attribute
@@ -8,19 +11,19 @@ class MyModel(object):
     DONOTSEND = []
     _jsonified = None
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '<{}>'.format(self.__class__.__name__)
 
-    def to_dict_recursive(self):
+    def to_dict_recursive(self) -> dict:
         return self._to_dict_recursive(list_objects_id_passed_through=[id(self)])
 
-    def _to_dict_recursive(self, list_objects_id_passed_through):
+    def _to_dict_recursive(self, list_objects_id_passed_through: List[int]) -> dict:
         # functions :
         # anti_circular_recursion : check if we've already called the object
         #                               if not do the recursion
         # type_shunt_recursive : select the actions for each type of attr
 
-        def anti_circular_recursion(obj):
+        def anti_circular_recursion(obj: Type[MyModel]) -> any:
             if id(obj) in list_objects_id_passed_through:
                 return str(obj)
                 # others possibilities
@@ -31,7 +34,7 @@ class MyModel(object):
                 return obj._to_dict_recursive(list_objects_id_passed_through)
 
         ##### what about dict which contains object(s) ? Is it possible in SQLAlchemy ?
-        def type_shunt_recursive(attribute):
+        def type_shunt_recursive(attribute: Any) -> Any:
             # model
             if issubclass(type(attribute), MyModel):
                 return anti_circular_recursion(attribute)
