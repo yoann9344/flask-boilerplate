@@ -1,6 +1,5 @@
 from flask import Blueprint
-
-# add your blueprints here, nothing more to do
+# import all blueprint's instances there, blueprints_list is registered in app/__init__.py
 from .main import main
 
 
