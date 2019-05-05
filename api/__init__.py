@@ -9,6 +9,8 @@ from sqlalchemy_utils import create_database, database_exists
 from api.config import config
 from api.core import all_exception_handler
 
+from backend.blueprints import blueprints_list
+
 
 class RequestFormatter(logging.Formatter):
     def format(self, record):
@@ -77,11 +79,10 @@ def create_app(test_config=None):
     db.init_app(app)  # initialize Flask SQLALchemy with this flask app
     Migrate(app, db)
 
-    # import and register blueprints
-    from api.views import main
-
     # why blueprints http://flask.pocoo.org/docs/1.0/blueprints/
-    app.register_blueprint(main.main)
+    # register blueprints
+    for blueprint_item in blueprints_list:
+        app.register_blueprint(blueprint_item)
 
     # register error Handler
     app.register_error_handler(Exception, all_exception_handler)
