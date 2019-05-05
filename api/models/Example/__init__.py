@@ -1,7 +1,6 @@
 # import there all classes, no more to do
 from .Email import Email
 from .Person import Person
-from .base import db
 
 # __all__ is automatically filled :
 __all__ = []
