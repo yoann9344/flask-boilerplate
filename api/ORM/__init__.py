@@ -1,4 +1,4 @@
 from .database import db
 # add subpackages there
-from .Gallerie import *
+from .Example import *
 from .Authentification import *
