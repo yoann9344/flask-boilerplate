@@ -1,8 +1,7 @@
-from api.core import Mixin
-from .base import db
+from ..database import db
 
 # Note that we use sqlite for our tests, so you can't use Postgres Arrays
-class Email(Mixin, db.Model):
+class Email(db.Model):
     """Email Table."""
 
     __tablename__ = "email"
