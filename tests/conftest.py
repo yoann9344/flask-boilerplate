@@ -36,7 +36,7 @@ def client(postgres):
     app.app_context().push()
 
     time.sleep(2)
-    from api.models import db
+    from api.ORM import db
 
     db.create_all()
     # for test client api reference
