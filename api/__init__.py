@@ -78,11 +78,11 @@ def create_app(test_config=None):
 
     # register sqlalchemy to this app
     with app.app_context():
-    db.init_app(app)
-    Migrate(app, db)
-    if not database_exists(db.engine.url):
-        create_database(db.engine.url)
-        print('Database créée : ' + str(database_exists(db.engine.url)))
+        db.init_app(app)
+        Migrate(app, db)
+        if not database_exists(db.engine.url):
+            create_database(db.engine.url)
+            print('Database créée : ' + str(database_exists(db.engine.url)))
 
 
     # why blueprints http://flask.pocoo.org/docs/1.0/blueprints/
