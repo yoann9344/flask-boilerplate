@@ -9,6 +9,9 @@ from sqlalchemy_utils import create_database, database_exists
 from api.config import config
 from api.core import all_exception_handler
 
+from api.ORM import db
+from sqlalchemy_utils import database_exists, create_database
+
 from backend.blueprints import blueprints_list
 
 
@@ -74,10 +77,13 @@ def create_app(test_config=None):
             create_database(db_url)
 
     # register sqlalchemy to this app
-    from api.models import db
-
-    db.init_app(app)  # initialize Flask SQLALchemy with this flask app
+    with app.app_context():
+    db.init_app(app)
     Migrate(app, db)
+    if not database_exists(db.engine.url):
+        create_database(db.engine.url)
+        print('Database créée : ' + str(database_exists(db.engine.url)))
+
 
     # why blueprints http://flask.pocoo.org/docs/1.0/blueprints/
     # register blueprints
