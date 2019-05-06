@@ -12,7 +12,7 @@ from api.core import all_exception_handler
 from api.ORM import db
 from sqlalchemy_utils import database_exists, create_database
 
-from backend.blueprints import blueprints_list
+from api.blueprints import blueprints_list
 
 
 class RequestFormatter(logging.Formatter):
