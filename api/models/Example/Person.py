@@ -1,5 +1,4 @@
-from api.core import Mixin
-from .base import db
+from ..database import db
 
 
 class Person(Mixin, db.Model):
