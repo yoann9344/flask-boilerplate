@@ -1,7 +1,7 @@
 from ..database import db
 
 
-class Person(Mixin, db.Model):
+class Person(db.Model):
     """Person Table."""
 
     __tablename__ = "person"
