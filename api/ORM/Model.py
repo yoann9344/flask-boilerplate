@@ -9,29 +9,28 @@ class ModelSQL(object):
 
     DONOTSEND_MODEL = {'_sa_instance_state'}
     DONOTSEND = []
-    _jsonified = None
 
     def __repr__(self) -> str:
         return '<{}>'.format(self.__class__.__name__)
 
     def to_dict_recursive(self) -> dict:
-        return self._to_dict_recursive(list_objects_id_passed_through=[id(self)])
+        return self._to_dict_recursive(obj_ids_crossed=[id(self)])
 
-    def _to_dict_recursive(self, list_objects_id_passed_through: List[int]) -> dict:
+    def _to_dict_recursive(self, obj_ids_crossed: List[int]) -> dict:
         # functions :
         # anti_circular_recursion : check if we've already called the object
         #                               if not do the recursion
         # type_shunt_recursive : select the actions for each type of attr
 
-        def anti_circular_recursion(obj: Type[ModelSQL]) -> any:
-            if id(obj) in list_objects_id_passed_through:
+        def check_crossed(obj: Type[ModelSQL]) -> any:
+            if id(obj) in obj_ids_crossed:
                 return str(obj)
                 # others possibilities
                 # return str(obj).join(' ').join(str(obj.id))
                 # return obj.id
             else:
-                list_objects_id_passed_through.append(id(obj))
-                return obj._to_dict_recursive(list_objects_id_passed_through)
+                obj_ids_crossed.append(id(obj))
+                return obj._to_dict_recursive(obj_ids_crossed)
 
         ##### what about dict which contains object(s) ? Is it possible in SQLAlchemy ?
         def type_shunt_recursive(attribute: Any) -> Any:
