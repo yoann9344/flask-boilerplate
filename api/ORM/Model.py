@@ -17,12 +17,16 @@ class ModelSQL(object):
         return self._to_dict_recursive(obj_ids_crossed=[id(self)])
 
     def _to_dict_recursive(self, obj_ids_crossed: List[int]) -> dict:
-        # functions :
-        # anti_circular_recursion : check if we've already called the object
-        #                               if not do the recursion
-        # type_shunt_recursive : select the actions for each type of attr
-
-        def check_crossed(obj: Type[ModelSQL]) -> any:
+        """ iterate through objects to create a dict
+        
+        Keywords arguments :
+        obj_ids_crossed -- List of objects' id already passed through, provides against circular recursion
+        
+        Inside functions :
+        check_crossed_obj -- Check if object has already been passed through
+        type_shunt_recursive -- Select actions for each type of attr
+        """
+        def check_crossed_obj(obj: Type[ModelSQL]) -> any:
             if id(obj) in obj_ids_crossed:
                 return str(obj)
                 # others possibilities
@@ -32,11 +36,10 @@ class ModelSQL(object):
                 obj_ids_crossed.append(id(obj))
                 return obj._to_dict_recursive(obj_ids_crossed)
 
-        ##### what about dict which contains object(s) ? Is it possible in SQLAlchemy ?
         def type_shunt_recursive(attribute: Any) -> Any:
             # model
             if issubclass(type(attribute), ModelSQL):
-                return anti_circular_recursion(attribute)
+                return check_crossed_obj(attribute)
             # recursive iteration of the list in case of the list is a relationship
             elif isinstance(attribute, list):
                 values = []
